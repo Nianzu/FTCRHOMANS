@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp(name="Template: Linear OpMode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="OpMode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 public class OpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -31,7 +31,8 @@ public class OpMode extends LinearOpMode {
         l2.setDirection(DcMotor.Direction.FORWARD);
         r1.setDirection(DcMotor.Direction.FORWARD);
         r2.setDirection(DcMotor.Direction.REVERSE);
-
+        //Var for direction of robot
+        boolean forward=true;
         waitForStart();
         runtime.reset();
 
@@ -39,13 +40,28 @@ public class OpMode extends LinearOpMode {
             //This notifies the debugger that we have reached the "Initialised stage.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
-            //This sets the motors to joystick values.
-            l1.setPower(-gamepad1.left_stick_y);
-            l2.setPower(-gamepad1.left_stick_y);
-            r1.setPower(-gamepad1.right_stick_y);
-            r2.setPower(-gamepad1.right_stick_y);
+            if(gamepad1.a){
+                forward=true;
+            }else if(gamepad1.b){
+                forward=false;
+            }
+
+            if(forward) {
+                //This sets the motors to joystick values.
+                l1.setPower((gamepad1.left_stick_y)/2);
+                l2.setPower((gamepad1.left_stick_y)/2);
+                r1.setPower((gamepad1.right_stick_y)/2);
+                r2.setPower((gamepad1.right_stick_y)/2);
+            }else if(!forward){
+                //This sets the motors to joystick values.
+                l1.setPower((-gamepad1.right_stick_y)/2);
+                l2.setPower((-gamepad1.right_stick_y)/2);
+                r1.setPower((-gamepad1.left_stick_y)/2);
+                r2.setPower((-gamepad1.left_stick_y)/2);
+            }
             //idle is ALWAYS called at the end of the opmode thing.(Its a method)
             idle();
         }
     }
 }
+
